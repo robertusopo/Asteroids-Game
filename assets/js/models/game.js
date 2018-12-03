@@ -8,10 +8,10 @@ function Game(canvasElement) {
 
     this.bg = new Background(this.ctx);
     this.spaceship = new Player(this.ctx);
+    this.lifeBar = new LifeBar(this.ctx);
+    this.lifeProgress = new LifeProgress(this.ctx);
   
     this.bubbles = [];
-
-    this.lives = 5;
 
     this.timer = 100;
 
@@ -22,7 +22,9 @@ function Game(canvasElement) {
 
   Game.prototype.start = function() {
     this.intervalId = setInterval(function() {
+
       this.clear();
+
       this.drawAll();
       
       this.spaceship.bullets.forEach(function(bullet) {
@@ -30,21 +32,28 @@ function Game(canvasElement) {
         if(BulletBubble) {
           console.log("colision bala")
           this.removeBubble(BulletBubble);
-
+          var bulletIndex = this.spaceship.bullets.indexOf(BulletBubble);
+          this.spaceship.bullets.splice(bulletIndex, 1);
         }
       }.bind(this));
+
       var ShipBubble = this.spaceshipCollision();
       if (ShipBubble) {
         console.log("colision nave")
         this.removeBubble(ShipBubble);
-        this.substractLives();
+        
+        this.spaceship.substractLives();
+        this.updateLives();
       }
 
-      if (this.lives === 0) {
+      if (this.spaceship.lives === 0) {
         this.gameOver();
       }
-      console.log(this.lives);
+
+      console.log(this.spaceship.lives);
+
       this.moveAll();
+
     }.bind(this), DRAW_INTERVAL_MS);
   };
   
@@ -62,6 +71,8 @@ function Game(canvasElement) {
       this.addBubble();
       this.drawCount = 0; 
     }
+    this.lifeProgress.draw();
+    this.lifeBar.draw();
   };
   
   Game.prototype.moveAll = function(action) { 
@@ -94,10 +105,29 @@ function Game(canvasElement) {
     }.bind(this), 300)
   }
 
-  Game.prototype.substractLives = function () {
-  this.lives--; 
-  }
-  
+  Game.prototype.updateLives = function () {
+    
+    if (this.spaceship.lives >= 135) {
+      this.lifeProgress.img.frameIndex = 0
+    } else if (this.spaceship.lives >= 120 ) {
+      this.lifeProgress.img.frameIndex = 1
+    } else if (this.spaceship.lives >= 105) {
+      this.lifeProgress.img.frameIndex = 3 
+    } else if (this.spaceship.lives >= 90) {
+        this.lifeProgress.img.frameIndex = 4
+    } else if (this.spaceship.lives >= 75) {
+      this.lifeProgress.img.frameIndex = 5
+    } else if (this.spaceship.lives >= 60) {
+      this.lifeProgress.img.frameIndex = 6
+    } else if (this.spaceship.lives >= 45) {
+      this.lifeProgress.img.frameIndex = 7
+    } else if (this.spaceship.lives >= 30) {
+      this.lifeProgress.img.frameIndex = 8
+    } else if (this.spaceship.lives <= 15) {
+      this.lifeProgress.img.frameIndex = 9
+    }
+}
+
   Game.prototype.gameOver = function() {
     clearInterval(this.intervalId);
 
@@ -114,3 +144,4 @@ function Game(canvasElement) {
   Game.prototype.clear = function() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   };
+

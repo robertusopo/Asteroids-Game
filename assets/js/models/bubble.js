@@ -78,10 +78,3 @@ function Bubble(ctx) {
     }
   };
   };
-  // Bubble.prototype.collisionDetect = function(o) {
-
-  //   var colX = this.x + this.w/1.2 > o.x && this.x + this.w < o.x + o.w + this.w;
-  //   var colY = this.y + this.h/1.2 > o.y && this.y + this.h < o.y + o.h + this.h;
-  
-  //   return colX && colY;
-  // };

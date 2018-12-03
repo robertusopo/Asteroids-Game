@@ -14,6 +14,8 @@ function Player(ctx) {
     this.angle = 0;
     this.v = 0;
 
+    this.lives = 150;
+
     this.drawCount = 0;
 
     this.setListeners();
@@ -24,8 +26,7 @@ function Player(ctx) {
     this.shooting = false;
 
     this.bullets = [];
-
-  }
+  };
   
   Player.prototype.draw = function() {
     
@@ -115,19 +116,19 @@ function Player(ctx) {
   
   Player.prototype.collisionDetect = function(o) {
 
-    // return this.x < obstacle.x + obstacle.width &&
-    // this.x + this.width > obstacle.x &&
-    // this.y < obstacle.y + obstacle.height &&
-    // this.height + this.y > obstacle.y;
-
-    var colX = this.x + this.w > o.x && this.x + this.w < o.x + o.w + this.w;
-    var colY = this.y + this.h> o.y && this.y + this.h < o.y + o.h + this.h;
-   
-    // console.info('colX => ', colX)
-    // console.info('colY => ', colY)
-
-    return colX && colY;
+  if (this.x < o.x + o.w &&
+      this.x + this.w > o.x &&
+      this.y < o.y + o.h &&
+      this.h + this.y > o.y) {
+      return true;
+    } else {
+      return false;
+    }
   };
+
+  Player.prototype.substractLives = function () {
+    this.lives -=  2; 
+    }
 
   Player.prototype.addBullet = function () {
     var bullet = new Bullet(this.ctx, this.x + this.w / 2, this.y + this.h / 2, this.angle);

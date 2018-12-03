@@ -34,16 +34,13 @@ function Bullet(ctx,x,y,angle) {
   
   Bullet.prototype.collisionDetect = function(o) {
 
-    var colX = this.x + this.w > o.x && this.x + this.w < o.x + o.w + this.w;
-    var colY = this.y + this.h> o.y && this.y + this.h < o.y + o.h + this.h;
-
-  // console.log(o)
-  //  console.log("colX",colX);
-  //  console.log("colY",colY);
-  //  console.log(o);
-  return colX && colY;
+    if (this.x < o.x + o.w &&
+      this.x + this.w > o.x &&
+      this.y < o.y + o.h &&
+      this.h + this.y > o.y) {
+      return true;
+    };
   };
-  
   
   Bullet.prototype.move = function() {
 
