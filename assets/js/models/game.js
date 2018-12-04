@@ -50,6 +50,15 @@ function Game(canvasElement) {
         this.updateLives();
       }
 
+      var ShipLife= this.lifeCollision();
+      if (ShipLife) {
+        console.log("colision nave")
+        this.removeLife(ShipLife);
+        
+        this.spaceship.addLives();
+        this.updateLives();
+      }
+
       if (this.spaceship.lives === 0) {
         this.gameOver();
       }
@@ -112,6 +121,18 @@ function Game(canvasElement) {
       return this.spaceship.collisionDetect(bubble);
     }.bind(this));
   }
+
+  Game.prototype.lifeCollision = function() {
+    return this.lifeBoxes.find(function(life) {
+      return this.spaceship.collisionDetect(life);
+    }.bind(this));
+  }
+
+  Game.prototype.removeLife = function(life) {
+      this.lifeBoxes = this.lifeBoxes.filter(function(b) {
+        return b !== life;
+      }.bind(this))
+    };
 
   Game.prototype.removeBubble = function(bubble) {
     bubble.alive = false;

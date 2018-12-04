@@ -146,7 +146,16 @@ function Player(ctx) {
 
   Player.prototype.substractLives = function () {
     this.lives -=  2; 
-    }
+    };
+
+    Player.prototype.addLives = function () {
+      if (this.lives <= 150) {
+      this.lives +=  50; 
+      }
+    };
+
+      
+
 
   Player.prototype.addBullet = function () {
     var bullet = new Bullet(this.ctx, this.x + this.w / 2, this.y + this.h / 2, this.angle);
@@ -181,6 +190,7 @@ function Player(ctx) {
       case KEY_DOWN:
       case KEY_UP:
       this.movingUp = false
+      break;
       case KEY_RIGHT:
         this.movingRight = false
         break;
@@ -189,8 +199,5 @@ function Player(ctx) {
         break;
       case KEY_SPACE:
         this.shooting = false;
-    }
-
-
-
-  };
+    };
+  }
