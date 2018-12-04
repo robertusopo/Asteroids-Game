@@ -114,16 +114,34 @@ function Player(ctx) {
   Player.prototype.animate = function() {
   };
   
-  Player.prototype.collisionDetect = function(o) {
+  Player.prototype.collisionDetect = function(object) {
+    var coll =  (
+      this.x < object.x + object.w &&
+      this.x + this.w > object.x &&
+      this.y < object.y + object.h &&
+      this.y + this.h > object.y
+    )
 
-  if (this.x < o.x + o.w &&
-      this.x + this.w > o.x &&
-      this.y < o.y + o.h &&
-      this.h + this.y > o.y) {
-      return true;
-    } else {
-      return false;
-    }
+    // this.ctx.beginPath();
+    // this.ctx.strokeStyle="yellow";
+    // this.ctx.moveTo(object.x,0);
+    // this.ctx.lineTo(object.x,999999);
+    // this.ctx.moveTo(0,object.y);
+    // this.ctx.lineTo(9999999,object.y);
+    // this.ctx.stroke();
+    // this.ctx.strokeRect(object.x,object.y,object.w,object.h);
+
+    // this.ctx.beginPath();
+    // this.ctx.strokeStyle="#FF0000";
+    // this.ctx.moveTo(this.x,0);
+    // this.ctx.lineTo(this.x,999999);
+    // this.ctx.moveTo(0,this.y);
+    // this.ctx.lineTo(9999999,this.y);
+    // this.ctx.stroke();
+    // this.ctx.strokeRect(this.x,this.y,this.w,this.h);
+
+
+    return coll;
   };
 
   Player.prototype.substractLives = function () {

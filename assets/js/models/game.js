@@ -12,10 +12,12 @@ function Game(canvasElement) {
     this.lifeProgress = new LifeProgress(this.ctx);
   
     this.bubbles = [];
+    this.lifeBoxes = [];
 
     this.timer = 100;
 
     this.drawCount = 0;
+    this.lifeCount = 0;
   }
   
 
@@ -26,6 +28,8 @@ function Game(canvasElement) {
       this.clear();
 
       this.drawAll();
+
+      this.moveAll();
       
       this.spaceship.bullets.forEach(function(bullet) {
         var BulletBubble = this.bulletCollision(bullet);
@@ -50,9 +54,8 @@ function Game(canvasElement) {
         this.gameOver();
       }
 
-      console.log(this.spaceship.lives);
+      //console.log(this.spaceship.lives);
 
-      this.moveAll();
 
     }.bind(this), DRAW_INTERVAL_MS);
   };
@@ -63,16 +66,24 @@ function Game(canvasElement) {
     this.bubbles.forEach(function(bubble) {
       bubble.draw();
     });
+    this.lifeBoxes.forEach(function(life) {
+      life.draw();
+    });
 
     this.drawCount++;
-
+    this.lifeCount++;
+  
     if (this.drawCount % this.timer === 0 ){
-      this.timer--;
       this.addBubble();
       this.drawCount = 0; 
     }
     this.lifeProgress.draw();
     this.lifeBar.draw();
+
+    if (this.lifeCount % 2200 === 0 ){
+      this.addLifeBox();
+      this.lifeCount = 0; 
+    }
   };
   
   Game.prototype.moveAll = function(action) { 
@@ -82,6 +93,12 @@ function Game(canvasElement) {
   Game.prototype.addBubble = function () {
     var bubble = new Bubble(this.ctx);
     this.bubbles.push(bubble);
+  };
+
+  Game.prototype.addLifeBox = function () {
+    var life = new LifeBox(this.ctx);
+    console.log(this.lifeBoxes)
+    this.lifeBoxes.push(life);
   };
   
   Game.prototype.bulletCollision = function(bullet) {

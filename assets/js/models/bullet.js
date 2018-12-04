@@ -32,12 +32,12 @@ function Bullet(ctx,x,y,angle) {
     this.ctx.restore();
   };
   
-  Bullet.prototype.collisionDetect = function(o) {
+  Bullet.prototype.collisionDetect = function(object) {
 
-    if (this.x < o.x + o.w &&
-      this.x + this.w > o.x &&
-      this.y < o.y + o.h &&
-      this.h + this.y > o.y) {
+    if (this.x  < object.x + object.w &&
+        this.x + this.w > object.x &&
+        this.y  < object.y + object.h &&
+        this.h + this.y > object.y) {
       return true;
     };
   };

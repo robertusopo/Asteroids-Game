@@ -8,8 +8,8 @@ function Bubble(ctx) {
 
     this.x = Math.floor(Math.random() * this.ctx.canvas.width + 1);
     this.y = Math.floor(Math.random() * this.ctx.canvas.height + 1);
-    this.w = 20 * 1.12;
-    this.h = 20 ;
+    this.w = 20;
+    this.h = 20;
 
     this.vx = 0;
     this.vy = 0;
@@ -36,15 +36,15 @@ function Bubble(ctx) {
       0,
       this.img.width/ this.img.frames,
       this.img.height,
-      this.x - this.w / 2,
-      this.y - this.h / 2, 
+      this.x,
+      this.y, 
       this.w,
       this.h
     );  
 
     if (this.drawCount % 10 === 0 ){
-        this.w += (1 * 1.12);
-        this.h += 1;
+        this.w ++;
+        this.h ++;
 
       }
 
