@@ -1,7 +1,7 @@
-function LifeBox(ctx) {
+function BulletBox(ctx) {
     this.ctx = ctx;
     this.img = new Image();
-    this.img.src = "assets/img/Life.png";
+    this.img.src = "assets/img/BulletBox.png";
 
     this.x = Math.floor(Math.random() * this.ctx.canvas.width + 1);
     this.y = Math.floor(Math.random() * this.ctx.canvas.height + 1);
@@ -10,10 +10,10 @@ function LifeBox(ctx) {
 
   }
 
-  LifeBox.prototype.animate = function() {
+  BulletBox.prototype.animate = function() {
   };
   
-  LifeBox.prototype.draw = function() {
+  BulletBox.prototype.draw = function() {
   
     this.ctx.drawImage(
       this.img,
@@ -25,5 +25,5 @@ function LifeBox(ctx) {
 
     };  
 
-  LifeBox.prototype.move = function() {
+  BulletBox.prototype.move = function() {
   };

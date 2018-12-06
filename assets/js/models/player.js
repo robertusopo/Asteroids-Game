@@ -26,19 +26,14 @@ function Player(ctx) {
     this.shooting = false;
 
     this.bullets = [];
+
+    this.bulletLvl = 1;
+    this.canShoot = true;
   };
   
   Player.prototype.draw = function() {
     
     this.drawCount++;
-
-    // if (this.drawCount % 1 === 0) {
-    //   this.drawCount = 0;
-    //   if (this.shooting) { this.addBullet() }
-    // } 
-    if(this.bullets < 5) {
-      if (this.shooting) { this.addBullet() }
-    };
 
     this.ctx.save();
 
@@ -59,14 +54,15 @@ function Player(ctx) {
 
     this.ctx.restore();
 
-    this.bullets.forEach(function(bullet) {
-      bullet.draw();
-    });
 
     this.bullets = this.bullets.filter(function(bullet) {
       return bullet.x <= this.ctx.canvas.width && bullet.x > 0 && bullet.y > 0 && bullet.y <= this.ctx.canvas.height;
     }.bind(this));
 
+    this.bullets.forEach(function(bullet) {
+      bullet.draw();
+    });
+  
   };
 
   Player.prototype.setListeners = function () {
@@ -109,6 +105,9 @@ function Player(ctx) {
       bullet.move();
     });
 
+    if (this.shooting && this.bulletLvl > 1) {
+      this.shoot();
+    }
   };
   
   Player.prototype.animate = function() {
@@ -148,20 +147,27 @@ function Player(ctx) {
     this.lives -=  2; 
     };
 
-    Player.prototype.addLives = function () {
-      if (this.lives <= 150) {
-      this.lives +=  50; 
-      }
-    };
+  Player.prototype.addLives = function () {
+    if (this.lives <= 150) {
+    this.lives +=  50; 
+    }
+  };
 
-      
+  Player.prototype.shoot = function () {
+    if (this.canShoot || this.bulletLvl > 1) {
+      this.canShoot = false;
+      var bullet = new Bullet(this.ctx, this.x + this.w / 2, this.y + this.h / 2, this.angle);
+      this.bullets.push(bullet);
+    }
+  };
 
+  Player.prototype.shootBoost = function () {
+    this.bulletLvl = 5;
+    setTimeout( function() {
+      this.bulletLvl = 1;
+    }.bind(this), 2000);
+  };
 
-  Player.prototype.addBullet = function () {
-    var bullet = new Bullet(this.ctx, this.x + this.w / 2, this.y + this.h / 2, this.angle);
-    this.bullets.push(bullet);
-  }
-  
   Player.prototype.onKeyDown = function(event) {
 
     switch (event.keyCode) {
@@ -178,8 +184,8 @@ function Player(ctx) {
       this.movingLeft = true
         break;
       case KEY_SPACE:
-      // this.addBullet()
-       this.shooting = true;
+        this.shoot();
+        this.shooting = true;
         break;
     }
   };
@@ -198,6 +204,7 @@ function Player(ctx) {
         this.movingLeft = false;
         break;
       case KEY_SPACE:
+        this.canShoot = true;
         this.shooting = false;
     };
   }
