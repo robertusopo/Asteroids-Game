@@ -89,16 +89,12 @@ function Player(ctx) {
   
     if (this.y >= this.ctx.canvas.height - this.h) {
       this.y = 0;
-      // this.v = 0;
     } else if (this.y <= 0) {
       this.y = this.ctx.canvas.height - this.h;
-      // this.v = 0;
     } else if (this.x >= this.ctx.canvas.width - this.w) {
       this.x = 0;
-      // this.v = 0;
     } else if (this.x <= 0) {
       this.x = this.ctx.canvas.width - this.w;
-      // this.v = 0;
     }
 
     this.v = this.v * FRICTION;

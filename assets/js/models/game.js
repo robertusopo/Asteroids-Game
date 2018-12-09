@@ -17,10 +17,12 @@ function Game(canvasElement) {
     this.bubbles = [];
     this.lifeBoxes = [];
     this.bulletBoxes = [];
+    this.planets = [];
 
-    this.timer = 100;
+    this.timer = 150;
 
-    this.drawCount = 0;
+    this.bubbleCount = 0;
+    this.planetCount = 0;
     this.lifeCount = 0;
     this.bulletCount = 0;
 
@@ -68,21 +70,41 @@ function Game(canvasElement) {
         }
       }.bind(this));
 
+      this.spaceship.bullets.forEach(function(bullet) {
+        var BulletPlanet = this.bulletPlanetCollision(bullet);
+        if(BulletPlanet) {
+          console.log("colision bala")
+          this.score += 20;
+          var bulletIndex = this.spaceship.bullets.indexOf(BulletPlanet);
+          this.spaceship.bullets.splice(bulletIndex, 1);
+
+          this.removePlanet(BulletPlanet)
+            
+        }
+      }.bind(this));
+
       var ShipBubble = this.spaceshipCollision();
       if (ShipBubble) {
         console.log("colision nave")
         this.removeBubble(ShipBubble);
-        
         this.spaceship.substractLives();
         this.updateLives();
       }
 
-      var ShipLife= this.lifeCollision();
+      var shipPlanet = this.spaceshipPlanetCollision();
+      if (shipPlanet) {
+        console.log("colision nave")
+        this.removePlanet(shipPlanet);
+        this.spaceship.substractLives();
+        this.updateLives();
+      }
+
+      var ShipLife = this.lifeCollision();
       if (ShipLife) {
         console.log("colision nave")
         this.sounds.play(2);
         this.removeLife(ShipLife);
-        this.score -= 1000;
+        this.score -= 200;
         this.spaceship.addLives();
         this.updateLives();
       }
@@ -92,7 +114,7 @@ function Game(canvasElement) {
         console.log("colision nave")
         this.sounds.play(3);
         this.removeBulletB(ShipBullet);
-        this.score -= 500;
+        this.score -= 100;
         this.spaceship.shootBoost();
       }
 
@@ -111,23 +133,42 @@ function Game(canvasElement) {
     this.spaceship.draw();
     this.bubbles.forEach(function(bubble) {
       bubble.draw();
+      bubble.move();
     });
+
+    this.planets.forEach(function(planet) {
+      planet.draw();
+      planet.move();
+    });
+
     this.lifeBoxes.forEach(function(life) {
       life.draw();
     });
+
     this.bulletBoxes.forEach(function(bulletB) {
       bulletB.draw();
     });
 
-    this.drawCount++;
+    this.bubbleCount++;
+    this.planetCount++;
     this.lifeCount++;
     this.bulletCount++;
 
     this.showScore();
   
-    if (this.drawCount % this.timer === 0 ){
+    if (this.bubbleCount % this.timer === 0 ){
       this.addBubble();
-      this.drawCount = 0; 
+      if(this.timer > 30){
+        this.timer--;
+        console.log(this.timer);
+      }
+      console.log(this.timer)
+      this.bubbleCount = 0; 
+    }
+
+    if (this.planetCount % 2300 === 0 ){
+      this.addPlanet();
+      // this.planetCount = 0;
     }
 
     this.lifeProgress.draw();
@@ -152,6 +193,11 @@ function Game(canvasElement) {
     this.bubbles.push(bubble);
   };
 
+  Game.prototype.addPlanet = function () {
+    var planet = new Planet(this.ctx);
+    this.planets.push(planet);
+  };
+
   Game.prototype.addPoints = function () {
     if (this.lifeCount % 100 === 0 ){
       this.score += 10;
@@ -173,10 +219,22 @@ function Game(canvasElement) {
       return bullet.collisionDetect(bubble);
     }.bind(this)); 
   }
+  
+  Game.prototype.bulletPlanetCollision = function(bullet) {
+    return this.planets.find(function(planet) {
+      return bullet.collisionDetect(planet);
+    }.bind(this)); 
+  }
 
   Game.prototype.spaceshipCollision = function() {
     return this.bubbles.find(function(bubble) {
       return this.spaceship.collisionDetect(bubble);
+    }.bind(this));
+  }
+
+  Game.prototype.spaceshipPlanetCollision = function() {
+    return this.planets.find(function(planet) {
+      return this.spaceship.collisionDetect(planet);
     }.bind(this));
   }
 
@@ -212,6 +270,19 @@ function Game(canvasElement) {
       })
     }.bind(this), 300)
     this.sounds.playPop(Math.floor(Math.random() * this.sounds.popSounds.length));
+  }
+
+  Game.prototype.removePlanet = function(planet) {
+    planet.lives--;
+    planet.img.frameIndex++;
+    this.sounds.playRock(Math.floor(Math.random() * this.sounds.popSounds.length));
+    if (planet.lives === 0) {
+      setTimeout(function() {
+        this.planets = this.planets.filter(function(b) {
+          return b !== planet;
+        })
+      }.bind(this), 0)
+    }
   }
 
   Game.prototype.showScore = function () {
