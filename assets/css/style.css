@@ -1,7 +1,20 @@
-html, body {
+/* html, body {
   margin: 0px;
   padding: 0px;
   background-color: rgb(3,1,13);
+} */
+
+html, body {
+  margin:0;
+  padding: 0;
+  background-color: rgb(3,1,13);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Helvetica,Sans-serif;
+  overflow-y:hidden;
+  overflow-x:hidden;
 }
 
 #start-pannel {
@@ -13,6 +26,90 @@ html, body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+}
+
+#start-pannel img {
+  position: absolute;
+  top: 25%;
+  left: 22%;
+  width: 50%;
+}
+
+#start-pannel a {
+  position: absolute;
+  top: 60%;
+  left: 44%;
+}
+
+#gameover-pannel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* background: url('../img/Space-Background.jpg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; */
+}
+
+#gameover-pannel img {
+  position: absolute;
+  top: 25%;
+  left: 22%;
+  width: 50%;
+}
+
+#gameover-pannel a {
+  position: absolute;
+  top: 60%;
+  left: 44%;
+}
+#gameover-pannel h2 {
+  position: absolute;
+  top: 30%;
+  left: 43%;
+  color: #d366a1;
+}
+
+a {
+  text-decoration:none;
+  color:#FFF;
+  -webkit-transition: color 2s ease-out;
+  -moz-transition: color 2s ease-out;
+}
+a:hover {
+  text-decoration:none;
+  color: #F4DD38;
+}
+.rainbow-button {
+  width:calc(10vw + 6px);
+  height:calc(4vw + 6px);
+  background-image: linear-gradient(90deg, #FFFFCC 0%, #FFFF99 49%, #FFCC66 80%, #FFFF99 100%);
+  border-radius:0px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-transform:uppercase;
+  font-size:1vw;
+  font-weight:bold;
+}
+.rainbow-button:after {
+  content:attr(alt);
+  width:10vw;
+  height:4vw;
+  background-color:rgb(3,1,13);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.rainbow-button:hover {
+  animation:slidebg 2s linear infinite;
+}
+
+@keyframes slidebg {
+  to {
+    background-position:20vw;
+  }
 }
 
 .hide {

@@ -10,6 +10,9 @@ function Game(canvasElement) {
     this.spaceship = new Player(this.ctx);
     this.lifeBar = new LifeBar(this.ctx);
     this.lifeProgress = new LifeProgress(this.ctx);
+    this.sounds = new Sounds();
+
+    this.score = 0;
   
     this.bubbles = [];
     this.lifeBoxes = [];
@@ -25,6 +28,12 @@ function Game(canvasElement) {
     this.startPanel.style.width = this.ctx.canvas.width + 'px';
     this.startPanel.style.height = this.ctx.canvas.height + 'px';
     document.getElementById('start-btn').addEventListener('click', this.onClickStartBtn.bind(this))
+
+    this.gameOverPannel = document.getElementById('gameover-pannel');
+    this.gameOverPannel.style.width = this.ctx.canvas.width + 'px';
+    this.gameOverPannel.style.height = this.ctx.canvas.height + 'px';
+    document.getElementById('restart-btn').addEventListener('click', this.onClickRestartBtn.bind(this))
+
   }
   
   Game.prototype.onClickStartBtn = function() {
@@ -32,7 +41,14 @@ function Game(canvasElement) {
     this.start();
   }
 
+  Game.prototype.onClickRestartBtn = function() {
+    location.reload();
+    // this.gameOverPannel.classList.add('hide');
+    // this.start();
+  }
+
   Game.prototype.start = function() {
+    this.sounds.play(4);
     this.intervalId = setInterval(function() {
 
       this.clear();
@@ -45,6 +61,7 @@ function Game(canvasElement) {
         var BulletBubble = this.bulletCollision(bullet);
         if(BulletBubble) {
           console.log("colision bala")
+          this.score += 10;
           this.removeBubble(BulletBubble);
           var bulletIndex = this.spaceship.bullets.indexOf(BulletBubble);
           this.spaceship.bullets.splice(bulletIndex, 1);
@@ -63,8 +80,9 @@ function Game(canvasElement) {
       var ShipLife= this.lifeCollision();
       if (ShipLife) {
         console.log("colision nave")
+        this.sounds.play(2);
         this.removeLife(ShipLife);
-        
+        this.score -= 1000;
         this.spaceship.addLives();
         this.updateLives();
       }
@@ -72,9 +90,14 @@ function Game(canvasElement) {
       var ShipBullet= this.bulletBCollision();
       if (ShipBullet) {
         console.log("colision nave")
+        this.sounds.play(3);
         this.removeBulletB(ShipBullet);
+        this.score -= 500;
         this.spaceship.shootBoost();
       }
+
+      this.addPoints();
+      console.log(this.score)
 
       if (this.spaceship.lives === 0) {
         this.gameOver();
@@ -99,11 +122,14 @@ function Game(canvasElement) {
     this.drawCount++;
     this.lifeCount++;
     this.bulletCount++;
+
+    this.showScore();
   
     if (this.drawCount % this.timer === 0 ){
       this.addBubble();
       this.drawCount = 0; 
     }
+
     this.lifeProgress.draw();
     this.lifeBar.draw();
 
@@ -124,6 +150,12 @@ function Game(canvasElement) {
   Game.prototype.addBubble = function () {
     var bubble = new Bubble(this.ctx);
     this.bubbles.push(bubble);
+  };
+
+  Game.prototype.addPoints = function () {
+    if (this.lifeCount % 100 === 0 ){
+      this.score += 10;
+    }
   };
 
   Game.prototype.addLifeBox = function () {
@@ -179,6 +211,13 @@ function Game(canvasElement) {
         return b !== bubble;
       })
     }.bind(this), 300)
+    this.sounds.playPop(Math.floor(Math.random() * this.sounds.popSounds.length));
+  }
+
+  Game.prototype.showScore = function () {
+    this.ctx.fillStyle="rgb(255,255,255)";
+    this.ctx.font="15px Arial";
+    this.ctx.fillText("Score " + this.score, 85, this.ctx.canvas.height- 90); 
   }
 
   Game.prototype.updateLives = function () {
@@ -204,12 +243,14 @@ function Game(canvasElement) {
     }
 }
 
+
+
   Game.prototype.gameOver = function() {
     clearInterval(this.intervalId);
-
-    if (confirm("GAME OVER! Play again?")) {
-      location.reload();
-    }
+    this.gameOverPannel.classList.remove('hide');
+    // if (confirm("GAME OVER! Play again?")) {
+    //   location.reload();
+    // }
   };
 
   Game.prototype.stop = function () { 

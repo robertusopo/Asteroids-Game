@@ -15,6 +15,7 @@ function Player(ctx) {
     this.v = 0;
 
     this.lives = 150;
+    this.sounds = new Sounds()
 
     this.drawCount = 0;
 
@@ -78,6 +79,7 @@ function Player(ctx) {
       this.img.frameIndex = 1;
       if (this.v > -5) {
         this.v += -SPEED_MOVE;
+        this.sounds.play(1);
       } else {
         this.v = - 5;
       } 
@@ -107,6 +109,8 @@ function Player(ctx) {
 
     if (this.shooting && this.bulletLvl > 1) {
       this.shoot();
+      
+      
     }
   };
   
@@ -156,6 +160,7 @@ function Player(ctx) {
   Player.prototype.shoot = function () {
     if (this.canShoot || this.bulletLvl > 1) {
       this.canShoot = false;
+      this.sounds.play(0);
       var bullet = new Bullet(this.ctx, this.x + this.w / 2, this.y + this.h / 2, this.angle);
       this.bullets.push(bullet);
     }
